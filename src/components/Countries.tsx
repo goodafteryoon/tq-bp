@@ -1,25 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-
-type Country = {
-  flag: string;
-  name: {
-    common: string;
-  };
-  flags: {
-    png: string;
-  };
-};
+import { useCountries } from '../hooks/useCountries';
 
 const Countries = () => {
-  const {
-    data: countriesResponse,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['countries'],
-    queryFn: async () => await axios.get(`https://restcountries.com/v3.1/all`),
-  });
+  const { data: countries, isLoading, isError } = useCountries();
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -29,15 +11,13 @@ const Countries = () => {
     return <p>Something BAD occured</p>;
   }
 
-  if (!countriesResponse) {
+  if (!countries) {
     return <p>No data</p>;
   }
 
-  const { data: countires } = countriesResponse;
-
   return (
     <div>
-      {countires.map((country: Country, index: number) => {
+      {countries.map((country, index: number) => {
         if (index > 10) {
           return null;
         }
